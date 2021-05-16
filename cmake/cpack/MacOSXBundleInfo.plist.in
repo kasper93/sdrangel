@@ -11,9 +11,9 @@
 	<key>CFBundleGetInfoString</key>
 	<string>@CPACK_PACKAGE_DESCRIPTION_SUMMARY@</string>
 	<key>CFBundleIconFile</key>
-	<string>@APPLICATION_NAME@.icns</string>
+	<string>@SDRANGEL_NAME@.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>@IDENTIFIER@</string>
+	<string>@SDRANGEL_IDENTIFIER@</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
