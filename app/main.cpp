@@ -33,8 +33,8 @@ static int runQtApplication(int argc, char* argv[], qtwebapp::LoggerWithFile *lo
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 */
-	QCoreApplication::setOrganizationName(COMPANY);
-	QCoreApplication::setApplicationName(APPLICATION_NAME);
+	QCoreApplication::setOrganizationName(SDRANGEL_COMPANY);
+	QCoreApplication::setApplicationName(SDRANGEL_NAME);
     QCoreApplication::setApplicationVersion(SDRANGEL_VERSION);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)

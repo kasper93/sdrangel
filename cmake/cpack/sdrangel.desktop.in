@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=@APPLICATION_NAME@
+Name=@SDRANGEL_NAME@
 GenericName=SDR/Analyzer frontend
 Comment=SDR/Analyzer frontend for Airspy, Airspy HF+, BladeRF, HackRF, LimeSDR, PlutoSDR, RTL-SDR, SDRplay RSP1 and FunCube
 Exec=@CMAKE_PROJECT_NAME@

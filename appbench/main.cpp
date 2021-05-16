@@ -60,7 +60,7 @@ static int runQtApplication(int argc, char* argv[], qtwebapp::LoggerWithFile *lo
 {
     QCoreApplication a(argc, argv);
 
-    QCoreApplication::setOrganizationName(COMPANY);
+    QCoreApplication::setOrganizationName(SDRANGEL_COMPANY);
     QCoreApplication::setApplicationName("SDRangelBench");
     QCoreApplication::setApplicationVersion(SDRANGEL_VERSION);
 
