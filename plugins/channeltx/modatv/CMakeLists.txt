@@ -21,8 +21,7 @@ set(modatv_HEADERS
 )
 
 include_directories(
-	${OpenCV_INCLUDE_DIRS}
-        ${CMAKE_SOURCE_DIR}/swagger/sdrangel/code/qt5/client
+    ${CMAKE_SOURCE_DIR}/swagger/sdrangel/code/qt5/client
 )
 
 if(NOT SERVER_MODE)
@@ -53,12 +52,14 @@ add_library(${TARGET_NAME} SHARED
 )
 
 target_link_libraries(${TARGET_NAME}
-        Qt5::Core
-        ${TARGET_LIB}
-	sdrbase
-	${TARGET_LIB_GUI}
-        swagger
-        "${OpenCV_LIBS}"
+    Qt5::Core
+    OpenCV::imgcodecs
+    OpenCV::imgproc
+    OpenCV::videoio
+    ${TARGET_LIB}
+    sdrbase
+    ${TARGET_LIB_GUI}
+    swagger
 )
 
 install(TARGETS ${TARGET_NAME} DESTINATION ${INSTALL_FOLDER})
