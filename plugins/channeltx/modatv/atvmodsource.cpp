@@ -22,7 +22,8 @@
 #include <QNetworkReply>
 #include <QBuffer>
 
-#include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include "dsp/dspcommands.h"
 #include "device/deviceapi.h"

@@ -16,9 +16,7 @@ if (CM256CC_FOUND AND (HAS_SSE3 OR HAS_NEON))
     add_subdirectory(remotesource)
 endif()
 
-if (OpenCV_FOUND)
-    add_subdirectory(modatv)
-endif()
+add_subdirectory(modatv)
 
 # Copied from channelrx/CMakeLists.txt - why not in top-level?
 find_package(FFmpeg COMPONENTS AVCODEC AVFORMAT AVUTIL SWSCALE)

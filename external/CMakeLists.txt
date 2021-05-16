@@ -144,14 +144,14 @@ else ()
 endif (LINUX)
 
 if (WIN32)
-    if (VS2015)
+    if (MSVC_VERSION GREATER 1899 AND MSVC_VERSION LESS 1910)
         if (CMAKE_SIZEOF_VOID_P EQUAL 8)
             set(VCREDIST_FILE "vcredist_msvc2015_x64${CMAKE_EXECUTABLE_SUFFIX}" CACHE INTERNAL "")
             # maybe add arm architecture
         else ()
             set(VCREDIST_FILE "vcredist_msvc2015_x86${CMAKE_EXECUTABLE_SUFFIX}" CACHE INTERNAL "")
         endif ()
-    elseif (VS2017)
+    elseif (MSVC_VERSION GREATER 1910 AND MSVC_VERSION LESS 1919)
         if (CMAKE_SIZEOF_VOID_P EQUAL 8)
             set(VCREDIST_FILE "vcredist_msvc2017_x64${CMAKE_EXECUTABLE_SUFFIX}" CACHE INTERNAL "")
             # maybe add arm architecture
@@ -1011,3 +1011,18 @@ if (WIN32 OR APPLE)
         endif ()
     endif (ENABLE_BLADERF)
 endif (WIN32 OR APPLE)
+
+# Disable warnings from 3rdparty imported targets
+if (MSVC)
+    get_directory_property(compile_options COMPILE_OPTIONS)
+    # Remove previous set warning flag to suppress 'override' warning
+    list(REMOVE_ITEM compile_options "/W3")
+    set_directory_properties(PROPERTIES COMPILE_OPTIONS "${compile_options}")
+    add_compile_options(/w)
+else()
+    add_compile_options(-w)
+endif()
+
+set(CMAKE_POLICY_DEFAULT_CMP0071 OLD)
+
+include(opencv.cmake)

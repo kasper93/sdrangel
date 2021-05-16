@@ -185,15 +185,6 @@ elseif(WIN32 OR MINGW)
     )
   endforeach(ffmpeg_dll)
 
-  # modatv.dll
-  file(GLOB OPENCV_DLLS "${OpenCV_LIBS_BIN_DIR}/opencv_world*${CMAKE_SHARED_LIBRARY_SUFFIX}")
-  foreach(opencv_dll ${OPENCV_DLLS})
-    get_filename_component(opencv_dll_name "${opencv_dll}"  NAME)
-    add_custom_target(copy_ffmpeg_${opencv_dll_name} ALL
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${opencv_dll}" "${SDRANGEL_BINARY_BIN_DIR}/"
-    )
-  endforeach(opencv_dll)
-
   if(ENABLE_SOAPYSDR AND SOAPYSDR_FOUND)
     # Soapy support libraries
     file(MAKE_DIRECTORY ${SDRANGEL_BINARY_LIB_DIR}/SoapySDR)
@@ -275,9 +266,6 @@ elseif(WIN32 OR MINGW)
     # demoddatv.dll
     install(DIRECTORY "${FFMPEG_LIBRARIES}/" DESTINATION "${INSTALL_LIB_DIR}"
       FILES_MATCHING PATTERN "*${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    # modatv.dll
-    install(DIRECTORY "${OpenCV_LIBS_BIN_DIR}/" DESTINATION "${INSTALL_LIB_DIR}"
-      FILES_MATCHING PATTERN "opencv_world*${CMAKE_SHARED_LIBRARY_SUFFIX}")
     # libusb
     get_filename_component(GFN_LIBUSB_DIR "${LIBUSB_LIBRARIES}" DIRECTORY)
     install(FILES "${GFN_LIBUSB_DIR}/libusb-1.0${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "${INSTALL_LIB_DIR}")

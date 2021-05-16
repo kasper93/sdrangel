@@ -4,6 +4,7 @@ include(DetectArchitecture)
 
 if (NOT APPLE)
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+  set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
   message(STATUS "Interprocedural optimization enabled")
 else()
   message(STATUS "Interprocedural optimization is disabled for Mac OS")

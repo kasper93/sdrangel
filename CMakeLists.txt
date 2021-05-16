@@ -192,19 +192,6 @@ elseif(APPLE)
   configure_file("${CMAKE_SOURCE_DIR}/cmake/cpack/MacOSXBundleInfo.plist.in"
     "${CMAKE_BINARY_DIR}/Info.plist" @ONLY)
 elseif (WIN32)
-  # check compiler version
-  if(MSVC_VERSION GREATER 1920 AND MSVC_VERSION LESS 1929)
-    set(VS2019 ON)
-  elseif(MSVC_VERSION GREATER 1910 AND MSVC_VERSION LESS 1919)
-    set(VS2017 ON)
-  elseif(MSVC_VERSION GREATER 1899 AND MSVC_VERSION LESS 1910)
-    set(VS2015 ON)
-  endif()
-
-  if(NOT VS2015 AND NOT VS2017 AND NOT VS2019)
-    message(FATAL_ERROR "You must use Microsoft Visual Studio 2015, 2017 or 2019 as compiler")
-  endif()
-
   # in alternative we can use ExternalProject
   set(EXTERNAL_LIBRARY_FOLDER "${CMAKE_SOURCE_DIR}/external/windows")
   set(FFTW3F_FOUND ON CACHE INTERNAL "")
@@ -212,11 +199,6 @@ elseif (WIN32)
   set(FFTW3F_LIBRARIES "${EXTERNAL_LIBRARY_FOLDER}/fftw-3/libfftw3f-3.lib" CACHE INTERNAL "")
   set(LIBUSB_INCLUDE_DIR "${EXTERNAL_LIBRARY_FOLDER}/libusb/include" CACHE INTERNAL "")
   set(LIBUSB_LIBRARIES "${EXTERNAL_LIBRARY_FOLDER}/libusb/MS64/dll/libusb-1.0.lib" CACHE INTERNAL "")
-  if(VS2019)
-    set(OpenCV_DIR "${EXTERNAL_LIBRARY_FOLDER}/opencv4" CACHE INTERNAL "")
-  else()
-    set(OpenCV_DIR "${EXTERNAL_LIBRARY_FOLDER}/opencv" CACHE INTERNAL "")
-  endif()
   set(PKG_CONFIG_EXECUTABLE "${EXTERNAL_LIBRARY_FOLDER}/pkg-config-lite/bin/pkg-config.exe" CACHE INTERNAL "")
   set(SOAPYSUPPORT_DIR "${EXTERNAL_LIBRARY_FOLDER}/soapysdr-support" CACHE INTERNAL "")
 
@@ -341,7 +323,6 @@ find_package(PkgConfig REQUIRED)
 find_package(Boost REQUIRED)
 find_package(FFTW3F REQUIRED)
 find_package(LibUSB REQUIRED)  # used by so many packages
-find_package(OpenCV OPTIONAL_COMPONENTS core highgui imgproc imgcodecs videoio) # channeltx/modatv
 find_package(LibSigMF) # SigMF recording files support
 if(NOT WIN32)
     find_package(ZLIB) # For DAB
@@ -357,28 +338,24 @@ if(APPLE)
   find_package(ICONV)
 endif()
 
-# unfortunately OpenCV library from windows doesn't set the cache option
-if(WIN32)
-  set(OpenCV_INCLUDE_DIRS "${OpenCV_INCLUDE_DIRS}" CACHE INTERNAL "")
-  set(OpenCV_LIBS "${OpenCV_LIBS}" CACHE INTERNAL "")
+############ uninstall target ################
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/include/uninstall.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake"
+  IMMEDIATE @ONLY)
 
-  # add libs folder for fixup_bundle()
-  get_filename_component(GFN_Boost_LIBS_DIR "${Boost_LIBS}" DIRECTORY)
+add_custom_target(uninstall
+  COMMAND ${CMAKE_COMMAND} -P
+  ${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake)
 
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(OpenCV_ARCH "64")
-  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(OpenCV_ARCH "86")
+function(add_custom_target target_name)
+  if(${target_name} STREQUAL "uninstall")
+      # Many projects unconditionally add 'uninstall' target which conflicts
+      # between them. Prevent anyone to create uninstall target.
+      return()
   endif()
-
-  set(OpenCV_LIBS_BIN_DIR "${OpenCV_DIR}/x${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin" CACHE INTERNAL "")
-
-  set(WINDOWS_FIXUP_BUNDLE_LIB_DIRS
-    "${WINDOWS_FIXUP_BUNDLE_LIB_DIRS}"
-    "${GFN_Boost_LIBS_DIR}"
-    "${OpenCV_LIBS_BIN_DIR}"
-  )
-endif()
+  _add_custom_target(${ARGV})
+endfunction()
 
 # include external cmake if needed
 if(ENABLE_EXTERNAL_LIBRARIES)
@@ -608,16 +585,6 @@ if (LINUX)
   install(FILES ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.desktop DESTINATION share/applications)
   install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/${CMAKE_PROJECT_NAME}_icon.svg DESTINATION share/icons/hicolor/scalable/apps)
 endif()
-
-############ uninstall target ################
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/include/uninstall.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake"
-  IMMEDIATE @ONLY)
-
-add_custom_target(uninstall
-  COMMAND ${CMAKE_COMMAND} -P
-  ${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake)
 
 ############ packaging ################
 add_subdirectory(cmake/cpack)
