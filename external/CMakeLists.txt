@@ -450,10 +450,13 @@ if (ZLIB_FOUND AND FAAD_FOUND)
     elseif (LINUX)
         set(DAB_LIBRARIES "${EXTERNAL_BUILD_LIBRARIES}/lib/libdab_lib${CMAKE_SHARED_LIBRARY_SUFFIX}" CACHE INTERNAL "")
     endif()
+    if (HAS_SSE2)
+        set(DAB_OPT -DX64_DEFINED=1)
+    endif ()
     if (WIN32)
         ExternalProject_Add(dab
-                GIT_REPOSITORY https://github.com/srcejon/dab-cmdline.git
-                GIT_TAG msvc
+                GIT_REPOSITORY https://github.com/kasper93/dab-cmdline.git
+                GIT_TAG 4769e72e854ae159588e8d5bfca730de9917d022
                 DEPENDS ${PTHREADS4W_DEPENDS}
                 PREFIX "${EXTERNAL_BUILD_LIBRARIES}/dab"
                 SOURCE_SUBDIR "library"
@@ -465,6 +468,7 @@ if (ZLIB_FOUND AND FAAD_FOUND)
                         -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIRS}
                         -DZLIB_LIBRARY=${ZLIB_LIBRARIES}
                         -DPTHREADS=${PTHREADS4W_LIBRARIES}
+                        ${DAB_OPT}
                 BUILD_BYPRODUCTS "${DAB_LIBRARIES}"
                 INSTALL_COMMAND ""
                 TEST_COMMAND ""
